@@ -35,9 +35,9 @@ public class OperatorPage {
     @OneToOne(cascade = CascadeType.ALL)
     private Operator operator;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OprToleranceTotal> oprToleranceTotal = new ArrayList<OprToleranceTotal>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OprServiceGrp> oprServiceGrps = new ArrayList<OprServiceGrp>();
 }

@@ -33,7 +33,7 @@ public class RTPPMData {
     private String systemMsg;
 
     @JsonProperty(value = "RAGThresholds")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RAGThresholds> ragThresholds = new ArrayList<RAGThresholds>();
 
     @JsonProperty(value = "WebPPMLink")
