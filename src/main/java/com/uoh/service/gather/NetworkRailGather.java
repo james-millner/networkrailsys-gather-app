@@ -1,15 +1,21 @@
 package com.uoh.service.gather;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uoh.config.SchedulerConfig;
+import com.uoh.domain.dto.TD;
+import com.uoh.domain.dto.TrainMovement;
 import com.uoh.service.AbstractNetworkRailGather;
+import com.uoh.service.dao.TDService;
+import com.uoh.service.dao.TrainMovementService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
- * com.uoh.service.gather.TD Class
+ * com.uoh.service.gather.NetworkRailGather Class
  * <p>
  * Created by James Millner on 28/03/2017 at 11:15.
  */
@@ -20,6 +26,11 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
 
     private static final String prefix = "/api";
 
+    @Autowired
+    private TDService tdService;
+
+    @Autowired
+    private TrainMovementService trainMovementService;
 
     /**
      * Method to call the TD api every five seconds to pull the high volume of TD messages.
@@ -41,6 +52,21 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
         {
             //Store TD data.
             logger.info(responseEntity.getBody());
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                TD tdResponse = mapper.readValue(responseEntity.getBody(), TD.class);
+
+                tdService.saveAllCAMSG(tdResponse.getCa_msgs());
+                tdService.saveAllCBMSG(tdResponse.getCb_msgs());
+                tdService.saveAllCCMSG(tdResponse.getCc_msgs());
+                tdService.saveAllCTMSG(tdResponse.getCt_msgs());
+                tdService.saveAllSFMSG(tdResponse.getSf_msgs());
+                tdService.saveAllSHMSG(tdResponse.getSh_msgs());
+                tdService.saveAllSGMSG(tdResponse.getSg_msgs());
+
+            } catch (Exception e){
+                logger.fatal(e);
+            }
         }
     }
 
@@ -64,6 +90,14 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
         {
             //Store TD data.
             logger.info(responseEntity.getBody());
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                TrainMovement response = mapper.readValue(responseEntity.getBody(), TrainMovement.class);
+
+                trainMovementService.saveAllTrainMovement(response.getMovements());
+            } catch (Exception e){
+                logger.fatal(e);
+            }
         }
     }
 
