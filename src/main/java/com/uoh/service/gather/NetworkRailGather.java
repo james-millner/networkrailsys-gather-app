@@ -1,18 +1,25 @@
 package com.uoh.service.gather;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uoh.config.SchedulerConfig;
 import com.uoh.domain.dto.TD;
 import com.uoh.domain.dto.TrainMovement;
+import com.uoh.domain.dto.VSTP;
+import com.uoh.domain.rtppm.RTPPM;
 import com.uoh.service.AbstractNetworkRailGather;
+import com.uoh.service.dao.RTPPMService;
 import com.uoh.service.dao.TDService;
 import com.uoh.service.dao.TrainMovementService;
+import com.uoh.service.dao.VSTPService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * com.uoh.service.gather.NetworkRailGather Class
@@ -31,6 +38,12 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
 
     @Autowired
     private TrainMovementService trainMovementService;
+
+    @Autowired
+    private RTPPMService rtppmService;
+
+    @Autowired
+    private VSTPService vstpService;
 
     /**
      * Method to call the TD api every five seconds to pull the high volume of TD messages.
@@ -73,7 +86,7 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
     /**
      * Method to call the Train Movement api every ten seconds to pull the high volume of Train Movement messages.
      */
-    @Scheduled(fixedDelay = SchedulerConfig.TEN_SECONDS)
+    @Scheduled(fixedDelay = SchedulerConfig.TEN_SECONDS, initialDelay = SchedulerConfig.TEN_SECONDS)
     public void getTrainMovementResponses() {
         logger.info("Getting Train Movement message response.");
 
@@ -104,7 +117,7 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
     /**
      * Method to call the RTPPM api every day to pull the RTPPM messages, one per minute.
      */
-    @Scheduled(fixedDelay = SchedulerConfig.ONE_DAY)
+    @Scheduled(fixedDelay = SchedulerConfig.ONE_DAY, initialDelay = SchedulerConfig.FIFTEEN_SECONDS)
     public void getRTPPMResponses() {
         logger.info("Getting RTPPM messages response.");
 
@@ -121,6 +134,16 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
         {
             //Store TD data.
             logger.info(responseEntity.getBody());
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode rtppmtree = new ObjectMapper().readTree(responseEntity.getBody());
+                for(JsonNode n : rtppmtree) {
+                    RTPPM rtppm = mapper.readValue(n.toString(), RTPPM.class);
+                    rtppmService.save(rtppm);
+                }
+            } catch (Exception e) {
+                logger.fatal(e);
+            }
         }
     }
 
@@ -145,6 +168,12 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
         {
             //Store TD data.
             logger.info(responseEntity.getBody());
+            try {
+                VSTP vstp = new ObjectMapper().readValue(responseEntity.getBody(), VSTP.class);
+                vstpService.save(vstp.getVstpMsgs());
+            } catch (Exception e) {
+
+            }
         }
     }
 

@@ -15,6 +15,7 @@ public class SchedulerConfig {
     public static final long ONE_SECOND = 1_000;
     public static final long FIVE_SECONDS = ONE_SECOND * 5;
     public static final long TEN_SECONDS = FIVE_SECONDS * 2;
+    public static final long FIFTEEN_SECONDS = FIVE_SECONDS * 3;
     public static final long ONE_MINUTE = ONE_SECOND * 60;
     public static final long TEN_MINUTES = ONE_MINUTE * 10;
     public static final long THIRTY_MINUTES = TEN_MINUTES * 3;
