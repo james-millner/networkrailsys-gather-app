@@ -1,7 +1,5 @@
 package com.uoh.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +15,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class AbstractNetworkRailGather {
-
-    private Log logger = LogFactory.getLog(this.getClass());
 
     @Value("${api.location}")
     public String API_URL;

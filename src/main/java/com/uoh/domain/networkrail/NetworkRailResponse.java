@@ -25,7 +25,7 @@ public class NetworkRailResponse {
 
         private final String displayName;
 
-        private FeedType(String displayName) {
+        FeedType(String displayName) {
             this.displayName = displayName;
         }
 

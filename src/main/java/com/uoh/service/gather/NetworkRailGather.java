@@ -7,7 +7,6 @@ import com.uoh.domain.dto.TD;
 import com.uoh.domain.dto.TrainMovement;
 import com.uoh.domain.dto.VSTP;
 import com.uoh.domain.rtppm.RTPPM;
-import com.uoh.domain.tsr.TSR;
 import com.uoh.domain.tsr.TSRData;
 import com.uoh.service.AbstractNetworkRailGather;
 import com.uoh.service.dao.*;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * com.uoh.service.gather.NetworkRailGather Class
@@ -174,7 +171,7 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
                 VSTP vstp = new ObjectMapper().readValue(responseEntity.getBody(), VSTP.class);
                 vstpService.save(vstp.getVstpMsgs());
             } catch (Exception e) {
-
+                logger.fatal(e);
             }
         }
     }

@@ -11,12 +11,12 @@ import java.util.List;
  */
 public interface NetworkRailResponseRepository extends JpaRepository<NetworkRailResponse, Long> {
 
-    public Long countByProcessed(Boolean processed);
+    Long countByProcessed(Boolean processed);
 
     @Query("SELECT MAX(t.id) FROM NetworkRailResponse t")
     Long getMaxId();
 
-    public List<NetworkRailResponse> findByFeedType(NetworkRailResponse.FeedType feedType);
+    List<NetworkRailResponse> findByFeedType(NetworkRailResponse.FeedType feedType);
 
-    public List<NetworkRailResponse> findByFeedTypeAndProcessed(NetworkRailResponse.FeedType type, Boolean processed);
+    List<NetworkRailResponse> findByFeedTypeAndProcessed(NetworkRailResponse.FeedType type, Boolean processed);
 }
