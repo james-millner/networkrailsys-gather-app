@@ -7,11 +7,10 @@ import com.uoh.domain.dto.TD;
 import com.uoh.domain.dto.TrainMovement;
 import com.uoh.domain.dto.VSTP;
 import com.uoh.domain.rtppm.RTPPM;
+import com.uoh.domain.tsr.TSR;
+import com.uoh.domain.tsr.TSRData;
 import com.uoh.service.AbstractNetworkRailGather;
-import com.uoh.service.dao.RTPPMService;
-import com.uoh.service.dao.TDService;
-import com.uoh.service.dao.TrainMovementService;
-import com.uoh.service.dao.VSTPService;
+import com.uoh.service.dao.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,9 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
 
     @Autowired
     private VSTPService vstpService;
+
+    @Autowired
+    private TSRService tsrService;
 
     /**
      * Method to call the TD api every five seconds to pull the high volume of TD messages.
@@ -115,9 +117,9 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
     }
 
     /**
-     * Method to call the RTPPM api every day to pull the RTPPM messages, one per minute.
+     * Method to call the RTPPM api every hour to pull the RTPPM messages, one per minute.
      */
-    @Scheduled(fixedDelay = SchedulerConfig.ONE_DAY, initialDelay = SchedulerConfig.FIFTEEN_SECONDS)
+    @Scheduled(fixedDelay = SchedulerConfig.ONE_HOUR, initialDelay = SchedulerConfig.FIFTEEN_SECONDS)
     public void getRTPPMResponses() {
         logger.info("Getting RTPPM messages response.");
 
@@ -149,9 +151,9 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
 
 
     /**
-     * Method to call the VSTP api every day to pull the VSTP messages, low volume.
+     * Method to call the VSTP api every hour to pull the VSTP messages, low volume.
      */
-    @Scheduled(fixedDelay = SchedulerConfig.ONE_DAY)
+    @Scheduled(fixedDelay = SchedulerConfig.ONE_HOUR)
     public void getVSTPResponses() {
         logger.info("Getting VSTP messages response.");
 
@@ -197,6 +199,16 @@ public class NetworkRailGather extends AbstractNetworkRailGather {
         {
             //Store TD data.
             logger.info(responseEntity.getBody());
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode rtppmtree = new ObjectMapper().readTree(responseEntity.getBody());
+                for(JsonNode n : rtppmtree) {
+                    TSRData tsrData = mapper.readValue(n.toString(), TSRData.class);
+                    tsrService.saveTSR(tsrData);
+                }
+            } catch (Exception e) {
+                logger.fatal(e);
+            }
         }
     }
 }
