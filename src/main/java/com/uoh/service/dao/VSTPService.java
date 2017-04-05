@@ -18,6 +18,10 @@ public class VSTPService {
     @Autowired
     protected VSTPMsgRepository vstpMsgRepository;
 
+    /**
+     * Method to save a collection of VSTP messages.
+     * @param vstpMsgList
+     */
     public void save(List<VSTPMsg> vstpMsgList) {
         vstpMsgRepository.save(vstpMsgList);
     }

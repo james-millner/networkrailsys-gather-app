@@ -16,6 +16,11 @@ public class TSRService {
     @Autowired
     private TSRDataRepository tsrDataRepository;
 
+    /**
+     * Method to save a TSR data object.
+     * @param data
+     * @return
+     */
     public TSRData saveTSR(TSRData data) {
         return tsrDataRepository.save(data);
     }

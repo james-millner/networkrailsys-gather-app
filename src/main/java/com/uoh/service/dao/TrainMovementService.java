@@ -18,6 +18,10 @@ public class TrainMovementService {
     @Autowired
     private TrainMovementRepository trainMovementRepository;
 
+    /**
+     * Method to save a collection of TrainMovement messages.
+     * @param movements
+     */
     public void saveAllTrainMovement(List<TrainMovement> movements) {
         trainMovementRepository.save(movements);
     }

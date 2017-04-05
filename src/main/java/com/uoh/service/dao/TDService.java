@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * com.uoh.service.dao.TDService Class
+ * com.uoh.service.dao.TDService Class holds methods to save all collections of TD messages.
  * <p>
  * Created by James Millner on 28/03/2017 at 11:45.
  */

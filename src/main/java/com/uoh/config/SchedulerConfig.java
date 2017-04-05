@@ -4,8 +4,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * com.uoh.config.SchedulerConfig Class
- * <p>
+ * com.uoh.config.SchedulerConfig Class holds long values that represent time. These values are used
+ * for task scheduling.
+ *
  * Created by James Millner on 28/03/2017 at 11:13.
  */
 @Configuration
